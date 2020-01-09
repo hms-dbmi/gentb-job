@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+
+  build:
+    commands:
+      - echo Building ${IMAGE:-gentb-job}:${TAG:-latest}...
+      - docker build --build-arg BUILD_ENV=${BUILD_ENV:-prod} -t ${IMAGE:-gentb-job}:${TAG:-latest} .
+      - echo Tagging new docker image...
+      - docker tag ${IMAGE:-gentb-job}:${TAG:-latest} $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/${IMAGE:-gentb-job}:${TAG:-latest}
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing ${IMAGE:-gentb-job}:${TAG:-latest}...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/${IMAGE:-gentb-job}:${TAG:-latest}

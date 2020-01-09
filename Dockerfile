@@ -2,7 +2,7 @@ FROM python:3.7-slim-stretch
 
 # Determine environment
 ARG BUILD_ENV=prod
-ENV BUILD_ENV=$BUILD_ENV
+ENV DBMI_ENV=$BUILD_ENV
 
 ARG GENTB_DATA_PATH=/mnt/data
 ENV GENTB_DATA_PATH=$GENTB_DATA_PATH

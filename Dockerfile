@@ -29,7 +29,4 @@ RUN apt-get update && \
 ADD /bin /usr/local/bin
 RUN chmod -R +x /usr/local/bin
 
-# Specify where the data volume is mounted
-VOLUME $GENTB_DATA_PATH
-
 CMD ["R", "--version"]

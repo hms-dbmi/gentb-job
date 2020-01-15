@@ -17,7 +17,16 @@ RUN apt-get update && \
         gnupg1 \
         apt-transport-https \
         ca-certificates && \
-    apt-key adv --keyserver keys.gnupg.net --recv-keys E19F5F87128899B192B1A2C2AD5F960A256A04AF && \
+    ( \
+        for key in E19F5F87128899B192B1A2C2AD5F960A256A04AF ; \
+        do \
+            apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys "$key" || \
+            apt-key adv --keyserver pgp.mit.edu --recv-keys "$key" || \
+            apt-key adv --keyserver keyserver.pgp.com --recv-keys "$key" || \
+            apt-key adv --keyserver keys.gnupg.net --recv-keys "$key" || \
+            apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "$key" ; \
+        done \
+    )  && \
     add-apt-repository 'deb https://cloud.r-project.org/bin/linux/debian stretch-cran35/' && \
     apt-get update -y -q && \
     apt-get install -y --no-install-recommends \
